@@ -49,18 +49,19 @@ module.exports.signIn = async function (req, res) {
 
     const pass = await bcrypt.compare(req.body.password, user.password);
     if (!pass) {
-      res.status(403).json({ message: "Invalid credentials" });
+      return res.status(403).json({ message: "Invalid credentials" });
     }
 
     const token = generateAccessToken({ id: user._id });
+
     res.cookie("access_token", token, {
       httpOnly: true,
-      maxAge: 900000,
+      maxAge: 3600000,
     });
-
+    console.log(token + "090");
     user.password = undefined;
     res.status(200).json(user);
   } catch (error) {
-    res.end();
+    console.log(error);
   }
 };
