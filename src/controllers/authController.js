@@ -58,7 +58,7 @@ module.exports.signIn = async function (req, res) {
       httpOnly: true,
       maxAge: 3600000,
     });
-    console.log(token + "090");
+    // console.log(token + "090");
     user.password = undefined;
     res.status(200).json(user);
   } catch (error) {

@@ -26,6 +26,8 @@ module.exports.getExpense = async (req, res) => {
       createdAt: -1,
     });
 
+    console.log(expenseData);
+
     let expenses = {};
 
     expenses.todayExpense = [];
@@ -86,7 +88,18 @@ module.exports.getExpense = async (req, res) => {
       }
     });
 
+    console.log(expenses);
     res.status(200).json(expenses);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports.removeExpense = async (req, res) => {
+  try {
+    const expenseId = req.params.id;
+    const expenseData = await Expense.findByIdAndDelete(expenseId);
+    res.status(200).json(expenseData);
   } catch (error) {
     console.log(error);
   }
