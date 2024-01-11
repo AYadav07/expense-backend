@@ -11,4 +11,6 @@ router.delete(
   expenseController.removeExpense
 );
 
+router.get("/get-expense-data", verifyToken, expenseController.filterExpense);
+
 module.exports = router;

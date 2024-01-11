@@ -30,6 +30,7 @@ module.exports.getExpense = async (req, res) => {
 
     let expenses = {};
 
+    expenses.expenses = expenseData;
     expenses.todayExpense = [];
     expenses.todayTotalExpense = 0;
     expenses.yesterdayExpense = [];
@@ -81,10 +82,36 @@ module.exports.getExpense = async (req, res) => {
       }
       expenses.lastOneYearExpense += eachExpense.amount;
       if (eachExpense.expenseDate >= last30daysStartDate) {
-        console.log("Do it later");
+        const date = eachExpense.expenseDate.getDate();
+        const expenseObj = expenses.dailyExpenses.find(
+          (exp) => exp["date"] === date
+        );
+        if (expenseObj) {
+          expenseObj["amount"] += eachExpense.amount;
+        } else {
+          const exp = {
+            date: date,
+            amount: eachExpense.amount,
+          };
+
+          expenses.dailyExpenses.push(exp);
+        }
       }
       if (eachExpense.expenseDate >= last12MontsStartDate) {
-        console.log("Do it later");
+        const mon = eachExpense.expenseDate.getMonth();
+        const expenseObj = expenses.monthlyExpense.find(
+          (exp) => exp["month"] === mon
+        );
+        if (expenseObj) {
+          expenseObj["amount"] += eachExpense.amount;
+        } else {
+          const exp = {
+            month: mon,
+            amount: eachExpense.amount,
+          };
+
+          expenses.monthlyExpense.push(exp);
+        }
       }
     });
 
@@ -102,5 +129,39 @@ module.exports.removeExpense = async (req, res) => {
     res.status(200).json(expenseData);
   } catch (error) {
     console.log(error);
+  }
+};
+
+module.exports.filterExpense = async (req, res) => {
+  try {
+    console.log("In filter");
+    const query = {};
+    query.user = req.user.id;
+
+    if (req.query.cats.length > 0) {
+      const categories = req.query.cats.split(",");
+      query.category = { $in: categories };
+    }
+
+    if (req.query.fromDate && req.query.toDate) {
+      query.expenseDate = {
+        $gte: req.query.fromDate,
+        $lte: req.query.toDate,
+      };
+    } else if (req.query.fromDate) {
+      query.expenseDate = { $gte: req.query.fromDate };
+    } else if (req.query.toDate) {
+      query.expenseDate = { $lte: req.query.toDate };
+    }
+
+    console.log(query);
+    let expenseData = await Expense.find(query).sort({
+      expenseDate: -1,
+      createdAt: -1,
+    });
+    console.log(expenseData);
+    res.status(200).json(expenseData);
+  } catch (err) {
+    console.log(err);
   }
 };
