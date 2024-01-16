@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { boolean } = require("zod");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -21,6 +22,10 @@ const UserSchema = new mongoose.Schema(
     },
     profile_pic: {
       type: String,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
