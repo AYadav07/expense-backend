@@ -15,7 +15,7 @@ const resetPassRequest = async function (req, res) {
       return res.status(404).json({ message: "Email is not verified" });
     }
 
-    const link = `${process.env.BASE_URL}/api/auth/resetPass-verify?`;
+    const link = `${process.env.BASE_URL}/api/auth/resetPass-verify`;
     sendVerificationMail(user._id, user.email, link, "Password reset link");
     return res.status(200).json({ message: "Reset Link are sent to email" });
   } catch (err) {
@@ -38,7 +38,7 @@ const resetPassTokenVerification = async function (req, res) {
       return res.status(404).json({ message: "Verify user first" });
     }
 
-    const tokenVal = await Token.findOne({ user: userId });
+    const tokenVal = await Token.findOne({ userId: userId });
     if (!tokenVal) {
       return res.status(404).json({ message: "Not Verified" });
     }
@@ -46,7 +46,6 @@ const resetPassTokenVerification = async function (req, res) {
     if (tokenVal.token != token) {
       return res.status(404).json({ message: "Invalid token" });
     }
-    await Token.findByIdAndDelete(tokenVal._id);
 
     const jwtToken = generateAccessToken({ id: user._id });
 
@@ -64,11 +63,18 @@ const resetPassTokenVerification = async function (req, res) {
 const resetPassword = async function (req, res) {
   try {
     const userId = req.user.id;
-    const salt = await bcrypt.genSalt(process.env.SALT_ROUND);
+    console.log(process.env.SALT_ROUND);
+    const tokenVal = await Token.findOne({ userId: userId });
+    if (!tokenVal) {
+      return res.status(404).json({ message: "Not Verified" });
+    }
+    await Token.findByIdAndDelete(tokenVal._id);
+    const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUND));
     const hashPass = await bcrypt.hash(req.body.password, salt);
-
+    console.log(hashPass);
     await User.findByIdAndUpdate(userId, { password: hashPass });
-    res.redirect(`${process.env.CLIENT}/`);
+
+    res.status(200).json({ message: "Password updated" });
   } catch (err) {
     return res.status(404).json({ message: "token verification Error" });
   }
