@@ -15,7 +15,7 @@ const path = require("path");
 
 const allowedOrigins = [
   "http://localhost:5000",
-  "https://expense-ui-six.vercel.app/",
+  "https://expense-ui-six.vercel.app",
 ];
 app.use(
   cors({
