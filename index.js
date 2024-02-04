@@ -5,11 +5,13 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 var cors = require("cors");
 const app = express();
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(express.json());
 app.use(cookieParser());
 const routes = require("./src/routes");
 const mongoose = require("./src/config/mongoose");
 const port = process.env.PORT || 7777;
+const path = require("path");
 
 const allowedOrigins = ["http://localhost:5000"];
 app.use(
@@ -40,6 +42,10 @@ app.use(function (req, res, next) {
 
   next();
 });
+app.use(
+  "/get-profile-pic",
+  express.static(path.join(__dirname, "uploads/profile_pics"))
+);
 
 app.use("/api", routes);
 app.listen(port, (err) => {

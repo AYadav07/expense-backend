@@ -6,7 +6,13 @@ const updateProfile = async function (req, res) {
       new: true,
     });
     user.password = undefined;
-    res.status(200).json(user);
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      name: user.name,
+      profile_pic: user.profile_pic,
+      cat: user.category,
+    });
   } catch (err) {
     return res.status(404).json({ message: "Error in profile updation." });
   }

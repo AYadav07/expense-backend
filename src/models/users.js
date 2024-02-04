@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    category: {
+      type: [String],
+      default: ["others"],
+    },
   },
   {
     timestamps: true,

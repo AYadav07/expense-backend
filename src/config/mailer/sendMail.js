@@ -5,7 +5,6 @@ const transporter = require("./transporter");
 const sendEmail = async (email, subject, payload) => {
   try {
     let emailTransporter = await transporter();
-    console.log("after transporter");
     //const source = fs.readFileSync(path.join(__dirname, template), "utf8");
     //const compiledTemplate = handlebars.compile(source);
     const options = () => {
@@ -22,7 +21,6 @@ const sendEmail = async (email, subject, payload) => {
       if (error) {
         return error;
       } else {
-        console.log("mail sent to: " + email);
         return res.status(200).json({
           success: true,
         });

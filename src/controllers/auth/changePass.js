@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 
 async function changePassword(req, res) {
   try {
-    console.log("In Chg pass");
     const userId = req.user.id;
     const user = await User.findById(userId);
     if (!user) {
@@ -22,7 +21,6 @@ async function changePassword(req, res) {
 
     res.status(200).json("Password canged successfully");
   } catch (error) {
-    console.log(error);
     res.json("Error occured");
   }
 }

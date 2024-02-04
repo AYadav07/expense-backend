@@ -10,11 +10,6 @@ const verifyEmailToken = async (req, res) => {
     if (!tokenVal) {
       return res.status(404).json({ message: "Not Verified" });
     }
-    console.log(tokenVal);
-    console.log(tokenVal.token);
-    console.log(token);
-    console.log(tokenVal.token != token);
-
     if (tokenVal.token != token) {
       return res.status(404).json({ message: "Invalid token" });
     }

@@ -53,7 +53,6 @@ const resetPassTokenVerification = async function (req, res) {
       httpOnly: true,
       maxAge: 3600000,
     });
-    // console.log(token + "090");
     res.redirect(`${process.env.CLIENT}/reset-password`);
   } catch (err) {
     return res.status(404).json({ message: "token verification Error" });
@@ -63,7 +62,6 @@ const resetPassTokenVerification = async function (req, res) {
 const resetPassword = async function (req, res) {
   try {
     const userId = req.user.id;
-    console.log(process.env.SALT_ROUND);
     const tokenVal = await Token.findOne({ userId: userId });
     if (!tokenVal) {
       return res.status(404).json({ message: "Not Verified" });
@@ -71,7 +69,6 @@ const resetPassword = async function (req, res) {
     await Token.findByIdAndDelete(tokenVal._id);
     const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUND));
     const hashPass = await bcrypt.hash(req.body.password, salt);
-    console.log(hashPass);
     await User.findByIdAndUpdate(userId, { password: hashPass });
 
     res.status(200).json({ message: "Password updated" });

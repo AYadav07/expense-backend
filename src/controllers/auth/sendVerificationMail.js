@@ -10,8 +10,6 @@ const sendVerificationMail = async function (userId, email, link, subject) {
       token: crypto.randomBytes(32).toString("hex"),
     });
     const message = `${link}?id=${userId}&token=${token.token}`;
-    console.log(message);
-    console.log("email link logged");
     sendEmail(email, subject, message);
   } catch (err) {
     throw err;

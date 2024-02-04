@@ -1,4 +1,5 @@
 const Expense = require("../models/expense");
+const User = require("../models/users");
 const dates = require("../utils/dateTimes");
 
 module.exports.addExpense = async (req, res) => {
@@ -10,9 +11,7 @@ module.exports.addExpense = async (req, res) => {
     }
     const expenseData = await Expense.create(expense);
     res.status(200).json(expenseData);
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 module.exports.getExpense = async (req, res) => {
@@ -26,11 +25,9 @@ module.exports.getExpense = async (req, res) => {
       createdAt: -1,
     });
 
-    console.log(expenseData);
-
     let expenses = {};
 
-    expenses.expenses = expenseData;
+    expenses.expenses = [];
     expenses.todayExpense = [];
     expenses.todayTotalExpense = 0;
     expenses.yesterdayExpense = [];
@@ -60,7 +57,10 @@ module.exports.getExpense = async (req, res) => {
     const lastMonthStartDate = dates.getLastMonth();
     const last12MontsStartDate = dates.get12MonthsDate();
     const last30daysStartDate = dates.getLastOneMonth();
-    expenseData.map((eachExpense) => {
+    expenseData.map((eachExpense, idx) => {
+      if (idx < 10) {
+        expenses.expenses.push(eachExpense);
+      }
       if (eachExpense.expenseDate >= todayDate) {
         expenses.todayExpense.push(eachExpense);
         expenses.todayTotalExpense += eachExpense.amount;
@@ -115,11 +115,8 @@ module.exports.getExpense = async (req, res) => {
       }
     });
 
-    console.log(expenses);
     res.status(200).json(expenses);
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 module.exports.removeExpense = async (req, res) => {
@@ -127,14 +124,11 @@ module.exports.removeExpense = async (req, res) => {
     const expenseId = req.params.id;
     const expenseData = await Expense.findByIdAndDelete(expenseId);
     res.status(200).json(expenseData);
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 module.exports.filterExpense = async (req, res) => {
   try {
-    console.log("In filter");
     const query = {};
     query.user = req.user.id;
 
@@ -154,14 +148,34 @@ module.exports.filterExpense = async (req, res) => {
       query.expenseDate = { $lte: req.query.toDate };
     }
 
-    console.log(query);
     let expenseData = await Expense.find(query).sort({
       expenseDate: -1,
       createdAt: -1,
     });
-    console.log(expenseData);
     res.status(200).json(expenseData);
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
+};
+
+module.exports.addCat = async function (req, res) {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $push: { category: req.body.cat } },
+      { new: true }
+    );
+    res.status(200).json(true);
+  } catch (err) {}
+};
+
+module.exports.removeCat = async function (req, res) {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { category: req.body.cat } },
+      { new: true }
+    );
+    res.status(200).json(true);
+  } catch (err) {}
 };

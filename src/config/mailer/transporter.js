@@ -3,7 +3,6 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
 const createTransporter = async () => {
-  console.log(process.env.CLIENT_ID);
   try {
     const oauth2Client = new OAuth2(
       process.env.CLIENT_ID,
@@ -18,7 +17,6 @@ const createTransporter = async () => {
     const accessToken = await new Promise((resolve, reject) => {
       oauth2Client.getAccessToken((err, token) => {
         if (err) {
-          console.log("*ERR: ", err);
           reject();
         }
         resolve(token);

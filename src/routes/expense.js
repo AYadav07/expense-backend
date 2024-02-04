@@ -12,5 +12,7 @@ router.delete(
 );
 
 router.get("/get-expense-data", verifyToken, expenseController.filterExpense);
+router.post("/add-category", verifyToken, expenseController.addCat);
+router.post("/remove-category", verifyToken, expenseController.removeCat);
 
 module.exports = router;

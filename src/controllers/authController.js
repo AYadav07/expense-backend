@@ -36,7 +36,6 @@ module.exports.signUp = async function (req, res) {
         name: req.body.username,
       });
     }
-    console.log(hashPass);
     const link = `${process.env.BASE_URL}/api/auth/verify`;
     sendVerificationMail(
       user._id,
@@ -50,7 +49,6 @@ module.exports.signUp = async function (req, res) {
       .status(200)
       .json({ message: "Verification Link is sent to email", user });
   } catch (error) {
-    console.log(error);
     res.end();
   }
 };
@@ -61,7 +59,6 @@ module.exports.signIn = async function (req, res) {
     const user = await User.findOne({
       $or: [{ username: req.body.userId }, { email: req.body.userId }],
     });
-    console.log(user);
     if (user && !user.verified) {
       const link = `${process.env.BASE_URL}/api/auth/verify`;
       sendVerificationMail(
@@ -89,10 +86,13 @@ module.exports.signIn = async function (req, res) {
       httpOnly: true,
       maxAge: 3600000,
     });
-    // console.log(token + "090");
     user.password = undefined;
-    res.status(200).json(user);
-  } catch (error) {
-    console.log(error);
-  }
+    res.status(200).json({
+      username: user.username,
+      email: user.email,
+      name: user.name,
+      profile_pic: user.profile_pic,
+      cat: user.category,
+    });
+  } catch (error) {}
 };
