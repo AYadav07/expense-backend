@@ -13,7 +13,10 @@ const mongoose = require("./src/config/mongoose");
 const port = process.env.PORT || 7777;
 const path = require("path");
 
-const allowedOrigins = ["http://localhost:5000"];
+const allowedOrigins = [
+  "http://localhost:5000",
+  "https://expense-ui-six.vercel.app/",
+];
 app.use(
   cors({
     credentials: true,
