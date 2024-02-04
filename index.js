@@ -13,10 +13,7 @@ const mongoose = require("./src/config/mongoose");
 const port = process.env.PORT || 7777;
 const path = require("path");
 
-const allowedOrigins = [
-  "http://localhost:5000",
-  "https://expense-ui-six.vercel.app",
-];
+const allowedOrigins = ["https://expense-ui-six.vercel.app"];
 app.use(
   cors({
     credentials: true,
@@ -37,7 +34,10 @@ app.use(
 );
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://expense-ui-six.vercel.app"
+  );
   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "content-type");
   res.header("Access-Control-Allow-Credentials", true);
