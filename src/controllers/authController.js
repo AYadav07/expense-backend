@@ -85,6 +85,8 @@ module.exports.signIn = async function (req, res) {
     res.cookie("access_token", token, {
       httpOnly: true,
       maxAge: 3600000,
+      sameSite: "none",
+      secure: true,
     });
     user.password = undefined;
     res.status(200).json({
