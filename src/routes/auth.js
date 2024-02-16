@@ -7,6 +7,7 @@ const verifyToken = require("../middlewares/verifyToken");
 const changePassword = require("../controllers/auth/changePass");
 const usernameAvail = require("../controllers/auth/checkUsernameAvail");
 const logout = require("../controllers/auth/logout");
+const isLogged = require("../controllers/auth/checkAuth");
 
 router.post("/sign-up", authController.signUp);
 router.post("/sign-in", authController.signIn);
@@ -17,5 +18,6 @@ router.post("/reset-password", verifyToken, resetPass.resetPassword);
 router.post("/change-pass", verifyToken, changePassword);
 router.get("/check-username", usernameAvail);
 router.get("/logout", verifyToken, logout);
+router.get("/check-login-status", verifyToken, isLogged);
 
 module.exports = router;
