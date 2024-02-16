@@ -89,11 +89,15 @@ module.exports.signIn = async function (req, res) {
       secure: true,
     });
     user.password = undefined;
+    console.log(user);
     res.status(200).json({
-      username: user.username,
-      email: user.email,
-      name: user.name,
-      profile_pic: user.profile_pic,
+      user: {
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        profile_pic: user.profile_pic,
+        userId: user._id,
+      },
       cat: user.category,
     });
   } catch (error) {}
