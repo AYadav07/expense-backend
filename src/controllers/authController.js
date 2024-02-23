@@ -83,6 +83,7 @@ module.exports.signIn = async function (req, res) {
     const token = generateAccessToken({ id: user._id });
 
     res.cookie("access_token", token, {
+      domain: "expense-ui-six.vercel.app",
       httpOnly: true,
       maxAge: 3600000,
       sameSite: "none",
