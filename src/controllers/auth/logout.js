@@ -1,6 +1,7 @@
 const logout = async function (req, res) {
   try {
     res.clearCookie("access_token", {
+      domain: "expense-ui-six.vercel.app",
       httpOnly: true,
       maxAge: 36,
       sameSite: "none",
