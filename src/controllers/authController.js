@@ -83,14 +83,14 @@ module.exports.signIn = async function (req, res) {
     const token = generateAccessToken({ id: user._id });
 
     res.cookie("access_token", token, {
-      domain: "expense-ui-six.vercel.app",
+      domain: "process.env.CLIENT",
       httpOnly: true,
       maxAge: 3600000,
       sameSite: "none",
       secure: true,
     });
     user.password = undefined;
-    console.log(user);
+    //console.log(user);
     res.status(200).json({
       user: {
         username: user.username,
@@ -100,6 +100,7 @@ module.exports.signIn = async function (req, res) {
         userId: user._id,
       },
       cat: user.category,
+      token: token,
     });
   } catch (error) {}
 };

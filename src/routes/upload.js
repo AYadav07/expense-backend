@@ -3,10 +3,11 @@ const router = express.Router();
 const verifyToken = require("../middlewares/verifyToken");
 const profilePicUpload = require("../controllers/uploads/profileUpload");
 const upload = require("../config/uploads");
+const verifyHeaderToken = require("../middlewares/verifyHeaderToken");
 
 router.post(
   "/profile-pic",
-  verifyToken,
+  verifyHeaderToken,
   upload.single("profile-pic"),
   profilePicUpload
 );
