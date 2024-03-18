@@ -21,9 +21,8 @@ app.use(
   cors({
     credentials: true,
     preflightContinue: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
     origin: function (origin, callback) {
-      // allow requests with no origin
-      // (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
         var msg =
@@ -39,10 +38,9 @@ app.use(
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", process.env.CLIENT);
   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "content-type");
+  res.header("Access-Control-Allow-Headers", "content-type, Authorization");
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Content-Type", "application/json;charset=UTF-8");
-
   next();
 });
 app.use(

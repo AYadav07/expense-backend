@@ -158,14 +158,12 @@ module.exports.filterExpense = async (req, res) => {
 
 module.exports.addCat = async function (req, res) {
   try {
-    console.log("in user func");
     const userId = req.user.id;
     const user = await User.findByIdAndUpdate(
       userId,
       { $push: { category: req.body.cat } },
       { new: true }
     );
-    console.log(user);
     res.status(200).json(true);
   } catch (err) {}
 };
